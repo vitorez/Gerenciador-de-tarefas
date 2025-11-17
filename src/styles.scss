@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+.welcome-banner-gradient {
+  background: linear-gradient(to right, #6e45ff, #c45eff);
+}
+
+.progress-bar-gradient {
+  background: linear-gradient(to right, #6e45ff, #c45eff);
+}
+
+.stat-box {
+  background-color: rgba(255, 255, 255, 0.2);
+  min-width: 100px;
+}
+
+.form-control:focus,
+.form-control:active {
+  box-shadow: none !important;
+  border-color: #dee2e6;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  left: 0;
+}

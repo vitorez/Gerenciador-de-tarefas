@@ -1,0 +1,149 @@
+<header class="d-flex justify-content-end align-items-center gap-3 mb-4">
+  <i class="bi bi-bell fs-5 text-secondary"></i>
+  <i class="bi bi-moon fs-5 text-secondary"></i>
+  <div class="d-flex align-items-center gap-2">
+    <span class="fw-bold text-dark">Alencs</span>
+    <img class="rounded-circle" src="https://i.pravatar.cc/40?u=alencs" alt="Foto do Usuário" />
+  </div>
+</header>
+
+<section class="p-4 p-md-5 rounded-3 text-white mb-4 welcome-banner-gradient">
+  <h2 class="fs-2 fw-semibold mb-2">👋 Hello, jao</h2>
+  <p class="opacity-75 mb-4">
+    Welcome back! Let's make today productive and accomplish your goals.
+  </p>
+
+  <div class="d-flex flex-wrap gap-3">
+    <div class="stat-box p-3 rounded">
+      <span class="fs-3 fw-bold d-block">3</span>
+      <span class="small opacity-75">Tasks Today</span>
+    </div>
+    <div class="stat-box p-3 rounded">
+      <span class="fs-3 fw-bold d-block">2</span>
+      <span class="small opacity-75">Completed</span>
+    </div>
+    <div class="stat-box p-3 rounded">
+      <span class="fs-3 fw-bold d-block">67%</span>
+      <span class="small opacity-75">Progress</span>
+    </div>
+  </div>
+</section>
+
+<section class="d-flex justify-content-between align-items-center mb-4">
+  <div class="input-group" style="max-width: 500px">
+    <span class="input-group-text bg-white border-end-0 text-muted">
+      <i class="bi bi-search"></i>
+    </span>
+    <input type="text" class="form-control border-start-0" placeholder="Search tasks..." />
+  </div>
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-primary">All</button>
+    <button type="button" class="btn btn-outline-secondary bg-white">Pending</button>
+    <button type="button" class="btn btn-outline-secondary bg-white">Completed</button>
+  </div>
+</section>
+
+<section class="card border-0 shadow-sm rounded-4">
+  <div class="card-body p-4">
+    <h3 class="fs-4 fw-semibold text-dark mb-3">Today</h3>
+
+    <div class="d-flex align-items-center gap-3 mb-4">
+      <span class="text-muted fw-medium small">66%</span>
+      <div class="progress flex-grow-1 bg-light" style="height: 10px; border-radius: 10px">
+        <div
+          class="progress-bar progress-bar-gradient"
+          role="progressbar"
+          style="width: 66%; border-radius: 10px"
+        ></div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column gap-3">
+      <div *ngFor="let task of pendingTasks" class="task-card p-3 d-flex align-items-center">
+        <div class="task-indicator" [ngClass]="task.colorClass"></div>
+
+        <span class="fw-medium text-secondary mb-0">{{ task.title }}</span>
+
+        <div class="d-flex align-items-center gap-3 ms-auto">
+          <span class="text-muted small">{{ task.time }}</span>
+          <i class="bi bi-circle fs-4 text-muted" style="cursor: pointer"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <div class="done-header d-flex align-items-center gap-2 mb-3">
+        <i class="bi bi-caret-down-fill"></i>
+        <span>Done ({{ completedTasks.length }})</span>
+      </div>
+
+      <div
+        *ngFor="let task of completedTasks"
+        class="task-card p-3 d-flex align-items-center opacity-75"
+      >
+        <div class="task-indicator" [ngClass]="task.colorClass"></div>
+
+        <span class="fw-medium text-muted text-decoration-line-through mb-0">{{ task.title }}</span>
+
+        <div class="d-flex align-items-center gap-3 ms-auto">
+          <span class="text-muted small">{{ task.time }}</span>
+          <i class="bi bi-check-circle-fill fs-4 text-success" style="cursor: pointer"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="d-flex align-items-center gap-2 mb-3">
+  <h3 class="fs-4 fw-bold text-dark m-0">Next 7 Days</h3>
+  <i class="bi bi-chevron-down text-secondary" style="font-size: 0.8rem"></i>
+</div>
+
+<section class="card border-0 shadow-sm rounded-4">
+  <div class="card-body p-4">
+    <div class="d-flex align-items-center gap-3 mb-4">
+      <span class="fw-bold text-dark">20%</span>
+      <div class="progress flex-grow-1 bg-light" style="height: 10px; border-radius: 10px">
+        <div
+          class="progress-bar progress-bar-gradient"
+          role="progressbar"
+          style="width: 20%; border-radius: 10px"
+        ></div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column gap-3">
+      <div *ngFor="let task of pendingTasks" class="task-card p-3 d-flex align-items-center">
+        <div class="task-indicator" [ngClass]="task.colorClass"></div>
+
+        <span class="fw-medium text-secondary mb-0">{{ task.title }}</span>
+
+        <div class="d-flex align-items-center gap-3 ms-auto">
+          <span class="text-muted small">{{ task.time }}</span>
+          <i class="bi bi-circle fs-4 text-muted" style="cursor: pointer"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <div class="done-header d-flex align-items-center gap-2 mb-3">
+        <i class="bi bi-caret-down-fill"></i>
+        <span>Done ({{ completedTasks.length }})</span>
+      </div>
+
+      <div
+        *ngFor="let task of completedTasks"
+        class="task-card p-3 d-flex align-items-center opacity-75"
+      >
+        <div class="task-indicator" [ngClass]="task.colorClass"></div>
+
+        <span class="fw-medium text-muted text-decoration-line-through mb-0">{{ task.title }}</span>
+
+        <div class="d-flex align-items-center gap-3 ms-auto">
+          <span class="text-muted small">{{ task.time }}</span>
+          <i class="bi bi-check-circle-fill fs-4 text-success" style="cursor: pointer"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,22 @@
+/* a barra cinza de fundo da tarefa */
+.task-card {
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  transition: transform 0.2s;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+}
+.task-indicator {
+  width: 6px;
+  height: 30px;
+  border-radius: 10px;
+  margin-right: 15px;
+}
+
+.done-header {
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
