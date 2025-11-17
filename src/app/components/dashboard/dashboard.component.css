@@ -20,3 +20,17 @@
   font-size: 0.9rem;
   color: #6c757d;
 }
+
+/* botão de adicionar tarefa (teste)  */
+.btn-add-task {
+  background-color: #f8f9fa;
+  border: 2px dashed #dee2e6;
+  color: #6c757d;
+  transition: all 0.2s ease;
+}
+
+.btn-add-task:hover {
+  background-color: #f3f0ff;
+  border-color: #c45eff;
+  color: #6e45ff;
+}
