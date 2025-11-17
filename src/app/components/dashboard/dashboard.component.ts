@@ -55,4 +55,18 @@ export class DashboardComponent {
       colorClass: 'bg-warning',
     },
   ];
+
+  tasks30Days = [
+    { title: 'Meditate for 10 minutes', time: 'Today, 8 PM', colorClass: 'bg-success' },
+    { title: 'Meditate for 10 minutes', time: 'Today, 8 PM', colorClass: 'bg-success' },
+    { title: 'Meditate for 10 minutes', time: 'Today, 8 PM', colorClass: 'bg-success' },
+    { title: 'Meditate for 10 minutes', time: 'Today, 8 PM', colorClass: 'bg-success' },
+    { title: 'Meditate for 10 minutes', time: 'Today, 8 PM', colorClass: 'bg-success' },
+    { title: 'Meditate for 10 minutes', time: 'Today, 8 PM', colorClass: 'bg-success' },
+    { title: 'Meditate for 10 minutes', time: 'Today, 8 PM', colorClass: 'bg-success' },
+    { title: 'Meditate for 10 minutes', time: 'Today, 8 PM', colorClass: 'bg-success' },
+    { title: 'Meditate for 10 minutes', time: 'Today, 8 PM', colorClass: 'bg-success' },
+  ];
+
+  tasks30DaysDone = [{ title: 'Pay the rent', time: 'Today, 12 AM', colorClass: 'bg-danger' }];
 }
