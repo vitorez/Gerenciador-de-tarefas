@@ -34,3 +34,30 @@
   border-color: #c45eff;
   color: #6e45ff;
 }
+
+.task-actions {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  margin-right: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.task-card:hover .task-actions {
+  opacity: 1;
+}
+
+.action-icon {
+  cursor: pointer;
+  font-size: 1rem;
+  color: #adb5bd;
+  transition: color 0.2s;
+}
+
+.action-icon.edit:hover {
+  color: #0d6efd;
+}
+
+.action-icon.delete:hover {
+  color: #dc3545;
+}
