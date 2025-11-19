@@ -121,10 +121,9 @@ export class DashboardComponent implements OnInit {
   }
 
   toggleTask(task: Task) {
-    // 1. Muda visualmente na hora (para ficar rápido pro usuário)
     task.completed = !task.completed;
 
-    // 2. Manda pro Backend salvar
+    //manda pro backend salvar
     this.taskService.updateTask(task).subscribe({
       next: () => {
         console.log(`Tarefa ${task.id} atualizada com sucesso!`);
@@ -132,7 +131,6 @@ export class DashboardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao atualizar:', err);
-        // Se der erro, desfaz a mudança visual para não enganar o usuário
         task.completed = !task.completed;
       },
     });
@@ -159,8 +157,6 @@ export class DashboardComponent implements OnInit {
 
   deleteTask() {
     if (confirm('🗑️ Are you sure you want to delete this task?')) {
-      // Aqui futuramente chamaremos o this.taskService.deleteTask(id)
-      // Por enquanto remove local:
       this.tasks = this.tasks.filter((t) => t.id !== this.currentTask.id);
       this.emitStats();
       this.closeEditor();
