@@ -4,8 +4,9 @@
       <app-sidebar></app-sidebar>
     </div>
 
-    <main class="col-md-9 ms-sm-auto col-lg-10 p-4 bg-light vh-100 overflow-auto">
-      <app-dashboard></app-dashboard>
-    </main>
+    <div class="col-md-9 ms-sm-auto col-lg-10 p-4 bg-light vh-100 overflow-auto">
+      <app-dashboard (statsChanged)="onStatsChanged($event)"></app-dashboard>
+    </div>
   </div>
 </div>
+

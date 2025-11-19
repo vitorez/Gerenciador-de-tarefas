@@ -9,4 +9,12 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
   templateUrl: './app.component.html',
   styleUrl: './app.scss',
 })
-export class AppComponent {}
+export class AppComponent {
+  completedToday = 0;
+  totalTasks = 0;
+
+  onStatsChanged(stats: { completedToday: number; totalTasks: number }) {
+    this.completedToday = stats.completedToday;
+    this.totalTasks = stats.totalTasks;
+  }
+}

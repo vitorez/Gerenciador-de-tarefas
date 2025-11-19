@@ -1,24 +1,29 @@
-.welcome-banner-gradient {
-  background: linear-gradient(to right, #6e45ff, #c45eff);
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.progress-bar-gradient {
-  background: linear-gradient(to right, #6e45ff, #c45eff);
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  height: 100vh;
+  overflow: hidden;
 }
 
-.stat-box {
-  background-color: rgba(255, 255, 255, 0.2);
-  min-width: 100px;
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-.form-control:focus,
-.form-control:active {
-  box-shadow: none !important;
-  border-color: #dee2e6;
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
 }
 
-.sidebar {
-  position: sticky;
-  top: 0;
-  left: 0;
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #5568d3 0%, #63388d 100%);
 }
