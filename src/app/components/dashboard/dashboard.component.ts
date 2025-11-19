@@ -1,19 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface Task {
-  id: number;
-  title: string;
-  description?: string;
-  category?: string;
-  date?: string;
-  time?: string;
-  timeRaw?: string;
-  section: 'today' | 'week' | 'month';
-  color: string;
-  completed: boolean;
-}
+import { TaskService, Task } from '../../services/task.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,9 +10,10 @@ interface Task {
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
-
 export class DashboardComponent implements OnInit {
   @Output() statsChanged = new EventEmitter<{ completedToday: number; totalTasks: number }>();
+
+  private taskService = inject(TaskService);
 
   tasks: Task[] = [];
   currentTask: Task = this.getEmptyTask();
@@ -33,12 +22,52 @@ export class DashboardComponent implements OnInit {
   searchTerm = '';
   currentFilter: 'all' | 'pending' | 'completed' = 'all';
 
+  //puxa os dados iniciais do banco
   ngOnInit() {
-    this.emitStats();
+    this.loadTasks();
+  }
+  //aqui faz a conexao com o back
+  loadTasks() {
+    this.taskService.getTasks().subscribe({
+      next: (data) => {
+        this.tasks = data;
+        this.emitStats();
+        console.log('Dados carregados do SQL Server:', data);
+      },
+      error: (err) => console.error('Erro ao carregar tarefas:', err),
+    });
+  }
+
+  saveTask() {
+    if (!this.currentTask.title.trim()) {
+      alert('⚠️ Please enter a task title');
+      return;
+    }
+
+    //chama o backend passando a tarefa que foi atualizada
+    if (this.isEditMode) {
+      this.taskService.updateTask(this.currentTask).subscribe({
+        next: () => {
+          console.log('Tarefa editada salva no banco!');
+          this.loadTasks();
+          this.closeEditor();
+        },
+        error: (err) => console.error('Erro ao editar:', err),
+      });
+    } else {
+      this.taskService.createTask(this.currentTask).subscribe({
+        next: () => {
+          console.log('Nova tarefa criada!');
+          this.loadTasks();
+          this.closeEditor();
+        },
+        error: (err) => console.error('Erro ao criar:', err),
+      });
+    }
   }
 
   get filteredTasks(): Task[] {
-    return this.tasks.filter(task => {
+    return this.tasks.filter((task) => {
       const matchesSearch = task.title.toLowerCase().includes(this.searchTerm.toLowerCase());
       const matchesFilter =
         this.currentFilter === 'all' ||
@@ -49,23 +78,23 @@ export class DashboardComponent implements OnInit {
   }
 
   get filteredTodayTasks(): Task[] {
-    return this.filteredTasks.filter(t => t.section === 'today');
+    return this.filteredTasks.filter((t) => t.section === 'today');
   }
 
   get filteredWeekTasks(): Task[] {
-    return this.filteredTasks.filter(t => t.section === 'week');
+    return this.filteredTasks.filter((t) => t.section === 'week');
   }
 
   get filteredMonthTasks(): Task[] {
-    return this.filteredTasks.filter(t => t.section === 'month');
+    return this.filteredTasks.filter((t) => t.section === 'month');
   }
 
   get todayTasksCount(): number {
-    return this.tasks.filter(t => t.section === 'today').length;
+    return this.tasks.filter((t) => t.section === 'today').length;
   }
 
   get completedTodayCount(): number {
-    return this.tasks.filter(t => t.section === 'today' && t.completed).length;
+    return this.tasks.filter((t) => t.section === 'today' && t.completed).length;
   }
 
   get todayProgressPercent(): number {
@@ -74,28 +103,39 @@ export class DashboardComponent implements OnInit {
   }
 
   get weekProgressPercent(): number {
-    const weekTasks = this.tasks.filter(t => t.section === 'week');
-    const completedWeek = weekTasks.filter(t => t.completed).length;
+    const weekTasks = this.tasks.filter((t) => t.section === 'week');
+    const completedWeek = weekTasks.filter((t) => t.completed).length;
     return weekTasks.length ? Math.round((completedWeek / weekTasks.length) * 100) : 0;
   }
 
   get monthProgressPercent(): number {
-    const monthTasks = this.tasks.filter(t => t.section === 'month');
-    const completedMonth = monthTasks.filter(t => t.completed).length;
+    const monthTasks = this.tasks.filter((t) => t.section === 'month');
+    const completedMonth = monthTasks.filter((t) => t.completed).length;
     return monthTasks.length ? Math.round((completedMonth / monthTasks.length) * 100) : 0;
   }
 
-  onSearchChange() {
-    // Método chamado quando o termo de busca muda
-  }
+  onSearchChange() {}
 
   setFilter(filter: 'all' | 'pending' | 'completed') {
     this.currentFilter = filter;
   }
 
   toggleTask(task: Task) {
+    // 1. Muda visualmente na hora (para ficar rápido pro usuário)
     task.completed = !task.completed;
-    this.emitStats();
+
+    // 2. Manda pro Backend salvar
+    this.taskService.updateTask(task).subscribe({
+      next: () => {
+        console.log(`Tarefa ${task.id} atualizada com sucesso!`);
+        this.emitStats(); // Recalcula as barrinhas de progresso
+      },
+      error: (err) => {
+        console.error('Erro ao atualizar:', err);
+        // Se der erro, desfaz a mudança visual para não enganar o usuário
+        task.completed = !task.completed;
+      },
+    });
   }
 
   openEditor(task?: Task) {
@@ -103,7 +143,7 @@ export class DashboardComponent implements OnInit {
       this.isEditMode = true;
       this.currentTask = {
         ...task,
-        timeRaw: this.convertTimeToInput(task.time || '')
+        timeRaw: this.convertTimeToInput(task.time || ''),
       };
     } else {
       this.isEditMode = false;
@@ -117,29 +157,11 @@ export class DashboardComponent implements OnInit {
     this.currentTask = this.getEmptyTask();
   }
 
-  saveTask() {
-    if (!this.currentTask.title.trim()) {
-      alert('⚠️ Please enter a task title');
-      return;
-    }
-
-    if (this.isEditMode) {
-      const index = this.tasks.findIndex(t => t.id === this.currentTask.id);
-      if (index !== -1) {
-        this.tasks[index] = { ...this.currentTask };
-      }
-    } else {
-      this.currentTask.id = Date.now();
-      this.tasks.push({ ...this.currentTask });
-    }
-
-    this.emitStats();
-    this.closeEditor();
-  }
-
   deleteTask() {
     if (confirm('🗑️ Are you sure you want to delete this task?')) {
-      this.tasks = this.tasks.filter(t => t.id !== this.currentTask.id);
+      // Aqui futuramente chamaremos o this.taskService.deleteTask(id)
+      // Por enquanto remove local:
+      this.tasks = this.tasks.filter((t) => t.id !== this.currentTask.id);
       this.emitStats();
       this.closeEditor();
     }
@@ -181,14 +203,14 @@ export class DashboardComponent implements OnInit {
     if (!time || !time.includes(':')) return '';
     const match = time.match(/(\d+):(\d+)\s*(AM|PM)/i);
     if (!match) return '';
-    
+
     let hours = parseInt(match[1]);
     const minutes = match[2];
     const period = match[3].toUpperCase();
-    
+
     if (period === 'PM' && hours !== 12) hours += 12;
     if (period === 'AM' && hours === 12) hours = 0;
-    
+
     return `${hours.toString().padStart(2, '0')}:${minutes}`;
   }
 
@@ -203,14 +225,14 @@ export class DashboardComponent implements OnInit {
       timeRaw: '',
       section: 'today',
       color: 'green',
-      completed: false
+      completed: false,
     };
   }
 
   private emitStats() {
     this.statsChanged.emit({
       completedToday: this.completedTodayCount,
-      totalTasks: this.tasks.length
+      totalTasks: this.tasks.length,
     });
   }
 }
