@@ -127,7 +127,7 @@ export class DashboardComponent implements OnInit {
     this.taskService.updateTask(task).subscribe({
       next: () => {
         console.log(`Tarefa ${task.id} atualizada com sucesso!`);
-        this.emitStats(); // Recalcula as barrinhas de progresso
+        this.emitStats();
       },
       error: (err) => {
         console.error('Erro ao atualizar:', err);
@@ -156,10 +156,22 @@ export class DashboardComponent implements OnInit {
   }
 
   deleteTask() {
-    if (confirm('🗑️ Are you sure you want to delete this task?')) {
-      this.tasks = this.tasks.filter((t) => t.id !== this.currentTask.id);
-      this.emitStats();
-      this.closeEditor();
+    if (!this.currentTask.id) return;
+
+    if (confirm('🗑️ Tem certeza que deseja excluir esta tarefa?')) {
+      this.taskService.deleteTask(this.currentTask.id).subscribe({
+        next: () => {
+          console.log('Tarefa excluída com sucesso!');
+
+          this.loadTasks();
+
+          this.closeEditor();
+        },
+        error: (err) => {
+          console.error('Erro ao excluir:', err);
+          alert('Erro ao tentar excluir a tarefa.');
+        },
+      });
     }
   }
 
